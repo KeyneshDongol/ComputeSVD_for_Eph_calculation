@@ -174,7 +174,7 @@ def compute_svd(params):
     maxSingularValue, termsToOnePercent = findMaxAndOnePercent(S)
     
     # Set the desired truncation dimension
-    r = int(termsToOnePercent)
+    r = int(termsToOnePercent) + 5 
 
     # Reconstruct the truncated matrix
     U_trunc, S_trunc, Vt_trunc = truncate_matrices(U, S, Vt, r)
@@ -189,14 +189,18 @@ def compute_svd(params):
     sum_result, _, _, _ = calcEph(k2, k1, truncated_result)
     
     # Extract the scalar value from g
-    gOld = g[0, 0, k, l, m]
-    gNew = sum_result[0,0,k,l,m]
+    gOld_temp = g[0, 0, k, l, m]
+    gOld = gOld_temp*gOld_temp.conj()
+
+
+    gNew_temp = sum_result[0,0,k,l,m]
+    gNew = gNew*gNew.conj()
 
     
     # Increment and print the counter
     increment_counter()
 
-    return (k, l, m, maxSingularValue, termsToOnePercent, gNew*gNew.conj(), gOld*gOld.conj())
+    return (k, l, m, maxSingularValue, termsToOnePercent, gNew, gOld)
 
 # Prepare the parameters for each task using itertools.product
 params = [(k, l, m, T_transposed, g) for k, l, m in itertools.product(range(9), range(8), range(8))]
@@ -209,7 +213,7 @@ with concurrent.futures.ProcessPoolExecutor() as executor:
 results = [result for result in results if result is not None]
 
 # Create a DataFrame from the results
-df = pd.DataFrame(results, columns=['k', 'l', 'm', 'max_singular_value', 'terms_to_one_percent', 'exponential_decay', 'sum_result', 'g_value'])
+df = pd.DataFrame(results, columns=['k', 'l', 'm', 'max_singular_value', 'terms_to_one_percent', 'gOld', 'gNew'])
 
 # Sort the DataFrame by columns 'k', 'l', 'm' in ascending order
 df_sorted = df.sort_values(by=['k', 'l', 'm'], ascending=[True, True, True])
