@@ -123,31 +123,6 @@ def calcEph(k1, k2, HePhWannier):
     return g, omegaPh, E1, E2
 
 
-def calcEph_truncated(k1, k2, HePhWannier_truncated):
-
-    # Electrons:
-    E1, U1 = calcE(k1)
-    E2, U2 = calcE(k2)
-
-    # Phonons for all pairs pf k1 - k2:
-    omegaPh, Uph = calcPh(k1[:,None,:] - k2[None,:,:])
-
-    # E-ph matrix elements for all pairs of k1 - k2:
-    phase1 = np.exp((2j * np.pi) * np.dot(k1,cellMapEph.T))
-    phase2 = np.exp((2j * np.pi) * np.dot(k2,cellMapEph.T))
-
-    # arg = np.dot(k1,cellMapEph.T)
-    # phasePrint = phase1.flatten();
-
-    normFac = np.sqrt(0.5 / np.maximum(omegaPh,1e-6))
-    normFac = np.ones(normFac.shape)
-    g = np.einsum(
-        'kKy, kac, Kbd, kKxy, kr, KR, rRxab -> kKycd',
-        normFac, U1.conj(), U2, Uph, phase1.conj(), phase2, HePhWannier_truncated,
-        optimize='optimal'
-    )
-    return g, omegaPh, E1, E2
-
 # ------------------------------------------------------------------
 # Call the above functions and print the results
 # ------------------------------------------------------------------
@@ -211,7 +186,7 @@ def compute_svd(params):
     # print("Shape of truncted_result is: ", truncated_result.shape)
 
 
-    sum_result, _, _, _ = calcEph_truncated(k2, k1, truncated_result)
+    sum_result, _, _, _ = calcEph(k2, k1, truncated_result)
     
     # Extract the scalar value from g
     gOld = g[0, 0, k, l, m]
