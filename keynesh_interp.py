@@ -20,7 +20,7 @@ nCells = cellMap.shape[0]
 nBands = int(np.sqrt(Wwannier.shape[0] / nCells))
 Wwannier = Wwannier.reshape((nCells,nBands,nBands)).swapaxes(1,2)
 # --- Get cell volume, mu and k-point folding from totalE.out:
-for line in open('totalE.out'):
+for line in open('files/totalE.out'):
     if line.startswith("unit cell volume"):
         Omega = float(line.split()[-1])
     if line.startswith('\tFillingsUpdate:'):
@@ -36,9 +36,9 @@ iReduced = np.dot(np.mod(cellMap, kfold[None,:]), kStride)
 Hwannier = Wwannier * Hreduced[iReduced]
 
 # Read phonon dispersion relation:
-cellMapPh = np.loadtxt('totalE.phononCellMap', usecols=[0,1,2]).astype(int)
+cellMapPh = np.loadtxt('files/totalE.phononCellMap', usecols=[0,1,2]).astype(int)
 nCellsPh = cellMapPh.shape[0]
-omegaSqR = np.fromfile('totalE.phononOmegaSq')  # just a list of numbers
+omegaSqR = np.fromfile('files/totalE.phononOmegaSq')  # just a list of numbers
 nModes = int(np.sqrt(omegaSqR.shape[0] // nCellsPh))
 omegaSqR = omegaSqR.reshape((nCellsPh, nModes, nModes)).swapaxes(1,2)
 
@@ -47,7 +47,7 @@ cellMapEph = np.loadtxt('files/wannier.mlwfCellMapPh', usecols=[0,1,2]).astype(i
 nCellsEph = cellMapEph.shape[0]
 
 # --- Get phonon supercell from phonon.out:
-for line in open('phonon.out'):
+for line in open('files/phonon.out'):
     tokens = line.split()
     if len(tokens)==5:
         if tokens[0]=='supercell' and tokens[4]=='\\':
