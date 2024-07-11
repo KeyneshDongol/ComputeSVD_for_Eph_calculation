@@ -14,8 +14,8 @@ from multiprocessing import Value, Lock#np.set_printoptions(precision=8, thresho
 # ====================================================================
 
 # Read the MLWF cell map, weights and Hamiltonian:
-cellMap = np.loadtxt("wannier.mlwfCellMap")[:,0:3].astype(int)
-Wwannier = np.fromfile("wannier.mlwfCellWeights")
+cellMap = np.loadtxt("files/wannier.mlwfCellMap")[:,0:3].astype(int)
+Wwannier = np.fromfile("files/wannier.mlwfCellWeights")
 nCells = cellMap.shape[0]
 nBands = int(np.sqrt(Wwannier.shape[0] / nCells))
 Wwannier = Wwannier.reshape((nCells,nBands,nBands)).swapaxes(1,2)
@@ -31,7 +31,7 @@ kfoldProd = np.prod(kfold)
 kStride = np.array([kfold[1]*kfold[2], kfold[2], 1])
 
 # --- Read reduced Wannier Hamiltonian, momenta and expand them:
-Hreduced = np.fromfile("wannier.mlwfH").reshape((kfoldProd,nBands,nBands)).swapaxes(1,2)
+Hreduced = np.fromfile("files/wannier.mlwfH").reshape((kfoldProd,nBands,nBands)).swapaxes(1,2)
 iReduced = np.dot(np.mod(cellMap, kfold[None,:]), kStride)
 Hwannier = Wwannier * Hreduced[iReduced]
 
@@ -43,7 +43,7 @@ nModes = int(np.sqrt(omegaSqR.shape[0] // nCellsPh))
 omegaSqR = omegaSqR.reshape((nCellsPh, nModes, nModes)).swapaxes(1,2)
 
 # Read e-ph matrix elements
-cellMapEph = np.loadtxt('wannier.mlwfCellMapPh', usecols=[0,1,2]).astype(int)
+cellMapEph = np.loadtxt('files/wannier.mlwfCellMapPh', usecols=[0,1,2]).astype(int)
 nCellsEph = cellMapEph.shape[0]
 
 # --- Get phonon supercell from phonon.out:
@@ -57,13 +57,13 @@ phononSupStride = np.array([phononSup[1]*phononSup[2], phononSup[2], 1])
 
 # --- Read e-ph cell weights:
 nAtoms = nModes // 3
-cellWeightsEph = np.fromfile("wannier.mlwfCellWeightsPh").reshape((nCellsEph,nBands,nAtoms)).swapaxes(1,2)
+cellWeightsEph = np.fromfile("files/wannier.mlwfCellWeightsPh").reshape((nCellsEph,nBands,nAtoms)).swapaxes(1,2)
 cellWeightsEph = np.repeat(cellWeightsEph.reshape((nCellsEph,nAtoms,1,nBands)), 3, axis=2)  # repeat atom weights for 3 directions
 cellWeightsEph = cellWeightsEph.reshape((nCellsEph,nModes,nBands))  # coombine nAtoms x 3 into single dimension: nModes
 
 # --- Read, reshape and expand e-ph matrix elements:
 iReducedEph = np.dot(np.mod(cellMapEph, phononSup[None,:]), phononSupStride)
-HePhReduced = np.fromfile('wannier.mlwfHePh').reshape((prodPhononSup,prodPhononSup,nModes,nBands,nBands)).swapaxes(3,4)
+HePhReduced = np.fromfile('files/wannier.mlwfHePh').reshape((prodPhononSup,prodPhononSup,nModes,nBands,nBands)).swapaxes(3,4)
 HePhWannier = cellWeightsEph[:,None,:,:,None] * cellWeightsEph[None,:,:,None,:] * HePhReduced[iReducedEph][:,iReducedEph]
 
 # END read in ===============================================================
@@ -194,7 +194,7 @@ def compute_svd(params):
 
 
     gNew_temp = sum_result[0,0,k,l,m]
-    gNew = gNew*gNew.conj()
+    gNew = gNew_temp*gNew_temp.conj()
 
     
     # Increment and print the counter
@@ -224,5 +224,5 @@ df_sorted.reset_index(drop=True, inplace=True)
 # Save the DataFrame to a CSV file
 df_sorted.to_csv('svd_results.csv', index=False)
 
-# Display the DataFrame
-print(df_sorted.head())
+# # Display the DataFrame
+# print(df_sorted.head())
