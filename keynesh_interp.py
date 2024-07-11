@@ -1,4 +1,4 @@
-# Save the following to WannierEph.py:
+# Save scipyillowing to WannierEph.py:
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
@@ -6,7 +6,8 @@ import h5py
 import pandas as pd
 import concurrent.futures
 from scipy.optimize import curve_fit
-np.set_printoptions(precision=8, threshold=1000000, linewidth=1000000, suppress=True)
+import itertools
+from multiprocessing import Value, Lock#np.set_printoptions(precision=8, threshold=1000000, linewidth=1000000, suppress=True)
 
 # ====================================================================
 # Here we are reading in data output by JDFTx, no modification needed
@@ -96,7 +97,7 @@ def calcPh(q):
 # Electron-phonon Wannier interpolation
 # Calculate e-ph matrix elements, along with ph and e energies, and e velocities
 # ------------------------------------------------------------------
-def calcEph(k1, k2):
+def calcEph(k1, k2, HePhWannier):
 
     # Electrons:
     E1, U1 = calcE(k1)
@@ -121,6 +122,32 @@ def calcEph(k1, k2):
     )
     return g, omegaPh, E1, E2
 
+
+def calcEph_truncated(k1, k2, HePhWannier_truncated):
+
+    # Electrons:
+    E1, U1 = calcE(k1)
+    E2, U2 = calcE(k2)
+
+    # Phonons for all pairs pf k1 - k2:
+    omegaPh, Uph = calcPh(k1[:,None,:] - k2[None,:,:])
+
+    # E-ph matrix elements for all pairs of k1 - k2:
+    phase1 = np.exp((2j * np.pi) * np.dot(k1,cellMapEph.T))
+    phase2 = np.exp((2j * np.pi) * np.dot(k2,cellMapEph.T))
+
+    # arg = np.dot(k1,cellMapEph.T)
+    # phasePrint = phase1.flatten();
+
+    normFac = np.sqrt(0.5 / np.maximum(omegaPh,1e-6))
+    normFac = np.ones(normFac.shape)
+    g = np.einsum(
+        'kKy, kac, Kbd, kKxy, kr, KR, rRxab -> kKycd',
+        normFac, U1.conj(), U2, Uph, phase1.conj(), phase2, HePhWannier_truncated,
+        optimize='optimal'
+    )
+    return g, omegaPh, E1, E2
+
 # ------------------------------------------------------------------
 # Call the above functions and print the results
 # ------------------------------------------------------------------
@@ -130,94 +157,93 @@ k1 = np.array([[0.0, 0.0, 0.]])
 k2 = np.array([[-0.375, 0.375, 0.]])
 
 # Get e-ph properties
-g, omegaPh, E1, E2  = calcEph(k2,k1)
+g, omegaPh, E1, E2  = calcEph(k2,k1,HePhWannier)
+
+# Shared counter and lock
+counter = Value('i', 0)
+lock = Lock()
 
 
-# ===================================================================
-# We now run the SVD and get the table that contains the maxSIngularVlaues, 
-# expoCoeff, and the termsToOnePercent all in parralel.
-# ==================================================================
-
-#twoDimMatrix = HePhWannier[;, ;, m ,n ,v]
-
-# Exponential decay function
-def expDecay(x, a, b, c):
-    return a * np.exp(-b * x) + c
+# Transpose the array to bring the last two dimensions to the front
+T_transposed = HePhWannier.transpose(2, 3, 4, 0, 1)  # New shape will be (9, 8, 8, 131, 131)
 
 # Function to find max value and terms till 1% of max
 def findMaxAndOnePercent(array):
-    #Find the max first 
     maxValue = np.max(array)
-
-    #Calculate the threshold for 1% of maxValue
-    threshold = maxValue * 0.01
-
-    # Count the no. of Elements to reach 1% of maxValue
+    threshold = maxValue * 0.001
     termsToOnePercent = np.sum(array >= threshold)
-
     return maxValue, termsToOnePercent
 
-def computeSVD(v, n, m, T):
-    try:
-        twoDimMatrix = HePhWannier[: ,: ,v ,n ,m]
-        UMatrix, SingValMatrix, VTransposeMatrix = np.linalg.svd(twoDimMatrix, full_matrices=False)
+# Function to truncate matrices
+def truncate_matrices(U, S, Vt, r):
+    U_trunc = U[:, :r]
+    S_trunc = S[:r]
+    Vt_trunc = Vt[:r, :]
+    return U_trunc, S_trunc, Vt_trunc
 
-        # Exponential decay fit 
-        x = np.arange(len(SingValMatrix))
-        popt, WeDontCareAboutThisTerm = curve_fit(expDecay, x, SingValMatrix, p0=(1, 1, 1))
-        a, expoCoeff, c = popt
 
-        # Calculate max singular value and terms to 1% of max
-        maxSingularValue, termsToOnePercent = findMaxAndOnePercent(SingValMatrix)
+# Function to increment and print the counter
+def increment_counter():
+    with lock:
+        counter.value += 1
+        print(f"Processed {counter.value} truncated results")
 
-        return (v, n, m, maxSingularValue, termsToOnePercent, expoCoeff)
+# Function to perform SVD on a specific slice and additional calculations
+def compute_svd(params):
+    k, l, m, T, g = params
+
+    matrix_2D = T[k, l, m, :, :]  # Extract (131, 131) slice+
+    U, S, Vt = np.linalg.svd(matrix_2D, full_matrices=False)
     
-    except Exception as e:
-        # print(f"Error processing slice k={k}, l={l}, m={m}: {e}")
-        return None 
+    # Calculate max singular value and terms to 1% of max
+    maxSingularValue, termsToOnePercent = findMaxAndOnePercent(S)
+    
+    # Set the desired truncation dimension
+    r = int(termsToOnePercent)
 
-# ThreadPoolExecutor will run parallel execution for computeSVD on each 2D slice.
+    # Reconstruct the truncated matrix
+    U_trunc, S_trunc, Vt_trunc = truncate_matrices(U, S, Vt, r)
+    truncated_matrix = np.dot(U_trunc, np.dot(np.diag(S_trunc), Vt_trunc))
+    
+    # Create a 5D array with the correct shape
+    truncated_result = np.empty((131, 131, T.shape[0], T.shape[1], T.shape[2]))
+    truncated_result[:, :, k, l, m] = truncated_matrix
+    # print("Shape of truncted_result is: ", truncated_result.shape)
 
-results = []
 
-with concurrent.futures.ThreadPoolExecutor() as executor:
-    # Prepare the list of tasks
-    futures = [executor.submit(computeSVD, v, n, m, HePhWannier) for v in range(9) for n in range(8) for m in range(8)]
+    sum_result, _, _, _ = calcEph_truncated(k2, k1, truncated_result)
+    
+    # Extract the scalar value from g
+    gOld = g[0, 0, k, l, m]
+    gNew = sum_result[0,0,k,l,m]
 
-    # Process the rest of the results as they complete
-    for future in concurrent.futures.as_completed(futures):
-        result = future.result()
-        if result is not None:
-            results.append(result)
+    
+    # Increment and print the counter
+    increment_counter()
+
+    return (k, l, m, maxSingularValue, termsToOnePercent, gNew*gNew.conj(), gOld*gOld.conj())
+
+# Prepare the parameters for each task using itertools.product
+params = [(k, l, m, T_transposed, g) for k, l, m in itertools.product(range(9), range(8), range(8))]
+
+# Use ThreadPoolExecutor for parallel execution
+with concurrent.futures.ProcessPoolExecutor() as executor:
+    results = list(executor.map(compute_svd, params))
+
+# Filter out None results
+results = [result for result in results if result is not None]
 
 # Create a DataFrame from the results
-df = pd.DataFrame(results, columns=['v', 'n', 'm', 'maxSingularValue', 'termsToOnePercent', 'expoCoeff'])
+df = pd.DataFrame(results, columns=['k', 'l', 'm', 'max_singular_value', 'terms_to_one_percent', 'exponential_decay', 'sum_result', 'g_value'])
 
-# Display the DataFrame
-#print(df.head())
-#df.to_csv("Readmev2")
-
-# Create a DataFrame from the results
-# df = pd.DataFrame(results, columns=['k', 'l', 'm', 'max_singular_value', 'terms_to_one_percent', 'exponential_decay'])
-
-# Sort the DataFrame by columns 'k', 'l', and 'm' in ascending order
-df_sorted = df.sort_values(by=['v', 'n', 'm'], ascending=[True, True, True])
+# Sort the DataFrame by columns 'k', 'l', 'm' in ascending order
+df_sorted = df.sort_values(by=['k', 'l', 'm'], ascending=[True, True, True])
 
 # Reset the index if you want a clean index
 df_sorted.reset_index(drop=True, inplace=True)
 
-# Display the sorted DataFrame
+# Save the DataFrame to a CSV file
+df_sorted.to_csv('svd_results.csv', index=False)
+
+# Display the DataFrame
 print(df_sorted.head())
-print(f"Total number of results: {len(df_sorted)}")    
-
-# Save the DataFrame to a Pickle file
-df_sorted.to_pickle('svd_results_redone.pkl')
-
-
-
-
-# print the result if we want to
-#np.set_printoptions(precision=3, threshold=1000000, linewidth=1000000, suppress=False)
-#g = (g.real**2 + g.imag**2) * 27.2114**2
-#g[g < 1e-14] = 0 # remove super small matrix elements
-#print(g[0,0,:,:,:])
