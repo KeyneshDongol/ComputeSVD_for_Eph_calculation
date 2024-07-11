@@ -1,0 +1,935 @@
+
+*************** JDFTx 1.7.0 (git hash 12396ea5) ***************
+
+Start date and time: Sun Apr 14 08:05:34 2024
+Executable /mnt/home/jcoulter/WORK/executables/jdftx/build/phonon_gpu with command-line: -i phonon.in
+Running on hosts (process indices):  workergpu061 (0-3)
+Divided in process groups (process indices):  0 (0)  1 (1)  2 (2)  3 (3)
+gpuInit: Found compatible cuda device 0 'NVIDIA A100-SXM4-80GB'
+gpuInit: Found compatible cuda device 1 'NVIDIA A100-SXM4-80GB'
+gpuInit: Found compatible cuda device 2 'NVIDIA A100-SXM4-80GB'
+gpuInit: Found compatible cuda device 3 'NVIDIA A100-SXM4-80GB'
+gpuInit: Selected device 0
+Resource initialization completed at t[s]:      0.71
+Run totals: 4 processes, 4 threads, 4 GPUs
+Memory pool size: 80000 MB (per process)
+
+
+Input parsed successfully to the following command list (including defaults):
+
+basis kpoint-dependent
+converge-empty-states yes
+coords-type Lattice
+core-overlap-check vector
+coulomb-interaction Periodic
+davidson-band-ratio 1.1
+dump End State IonicPositions Lattice ElecDensity Vscloc BandEigs EigStats
+dump Init Symmetries
+dump-name totalE.$VAR
+dump-only 
+elec-cutoff 30 120
+elec-eigen-algo Davidson
+elec-ex-corr gga-PBE
+elec-n-bands 22
+elec-smearing Fermi 0.01
+electronic-minimize  \
+	dirUpdateScheme      FletcherReeves \
+	linminMethod         DirUpdateRecommended \
+	nIterations          100 \
+	history              15 \
+	knormThreshold       0 \
+	maxThreshold         no \
+	energyDiffThreshold  1e-08 \
+	nEnergyDiff          2 \
+	alphaTstart          1 \
+	alphaTmin            1e-10 \
+	updateTestStepSize   yes \
+	alphaTreduceFactor   0.1 \
+	alphaTincreaseFactor 3 \
+	nAlphaAdjustMax      3 \
+	wolfeEnergy          0.0001 \
+	wolfeGradient        0.9 \
+	fdTest               no
+electronic-scf  \
+	nIterations	50 \
+	energyDiffThreshold	1e-09 \
+	residualThreshold	1e-07 \
+	mixFraction	0.5 \
+	qMetric	0.8 \
+	history	10 \
+	nEigSteps	2 \
+	eigDiffThreshold	1e-08 \
+	mixedVariable	Density \
+	qKerker	0.8 \
+	qKappa	-1 \
+	verbose	no \
+	mixFractionMag	1.5
+exchange-regularization WignerSeitzTruncated
+fluid None
+fluid-ex-corr lda-TF lda-PZ
+fluid-gummel-loop 10 1.000000e-05
+fluid-minimize  \
+	dirUpdateScheme      PolakRibiere \
+	linminMethod         DirUpdateRecommended \
+	nIterations          100 \
+	history              15 \
+	knormThreshold       0 \
+	maxThreshold         no \
+	energyDiffThreshold  0 \
+	nEnergyDiff          2 \
+	alphaTstart          1 \
+	alphaTmin            1e-10 \
+	updateTestStepSize   yes \
+	alphaTreduceFactor   0.1 \
+	alphaTincreaseFactor 3 \
+	nAlphaAdjustMax      3 \
+	wolfeEnergy          0.0001 \
+	wolfeGradient        0.9 \
+	fdTest               no
+fluid-solvent H2O 55.338 ScalarEOS \
+	epsBulk 78.4 \
+	pMol 0.92466 \
+	epsInf 1.77 \
+	Pvap 1.06736e-10 \
+	sigmaBulk 4.62e-05 \
+	Rvdw 2.61727 \
+	Res 1.42 \
+	tauNuc 343133 \
+	poleEl 15 7 1
+forces-output-coords Positions
+initial-state totalE.$VAR
+ion Mg   0.000000000000000   0.000000000000000  -0.000000000000000 1
+ion B   0.333333333333333   0.666666666666667   0.500000000000000 1
+ion B   0.666666666666667   0.333333333333333   0.500000000000000 1
+ion-species GBRV/$ID_pbe.uspp
+ion-width 0
+ionic-minimize  \
+	dirUpdateScheme      L-BFGS \
+	linminMethod         DirUpdateRecommended \
+	nIterations          0 \
+	history              15 \
+	knormThreshold       0.0001 \
+	maxThreshold         no \
+	energyDiffThreshold  1e-06 \
+	nEnergyDiff          2 \
+	alphaTstart          1 \
+	alphaTmin            1e-10 \
+	updateTestStepSize   yes \
+	alphaTreduceFactor   0.1 \
+	alphaTincreaseFactor 3 \
+	nAlphaAdjustMax      3 \
+	wolfeEnergy          0.0001 \
+	wolfeGradient        0.9 \
+	fdTest               no
+kpoint   0.000000000000   0.000000000000   0.000000000000  1.00000000000000
+kpoint-folding 8 8 6 
+latt-move-scale 1 1 1
+latt-scale 1 1 1 
+lattice  \
+	   2.906204327759499    2.906204327759499    0.000000000000000  \
+	  -5.033693552856001    5.033693552856001    0.000000000000000  \
+	  -0.000000000000000    0.000000000000000    6.656221934903306 
+lattice-minimize  \
+	dirUpdateScheme      L-BFGS \
+	linminMethod         DirUpdateRecommended \
+	nIterations          0 \
+	history              15 \
+	knormThreshold       0 \
+	maxThreshold         no \
+	energyDiffThreshold  1e-06 \
+	nEnergyDiff          2 \
+	alphaTstart          1 \
+	alphaTmin            1e-10 \
+	updateTestStepSize   yes \
+	alphaTreduceFactor   0.1 \
+	alphaTincreaseFactor 3 \
+	nAlphaAdjustMax      3 \
+	wolfeEnergy          0.0001 \
+	wolfeGradient        0.9 \
+	fdTest               no
+lcao-params -1 1e-06 0.01
+pcm-variant GLSSA13
+perturb-minimize  \
+	nIterations            0 \
+	algorithm              MINRES \
+	residualTol            0.0001 \
+	residualDiffThreshold  0.0001 \
+	CGBypass               no \
+	recomputeResidual      no
+phonon  \
+	supercell 4 4 3 \
+	dr 0.1 \
+	saveHsub yes \
+	T 298 \
+	Fcut 1e-08 \
+	rSmooth 1
+spintype no-spin
+subspace-rotation-factor 1 yes
+symmetries automatic
+symmetry-threshold 0.0001
+
+
+########### Unit cell calculation #############
+
+---------- Setting up symmetries ----------
+
+Found 24 point-group symmetries of the bravais lattice
+Found 24 space-group symmetries with basis
+Applied RMS atom displacement 2.51038e-15 bohrs to make symmetries exact.
+
+---------- Initializing the Grid ----------
+R = 
+[       2.9062       2.9062            0  ]
+[     -5.03369      5.03369            0  ]
+[            0            0      6.65622  ]
+unit cell volume = 194.747
+G =
+[      1.081  -0.624113          0  ]
+[      1.081   0.624113         -0  ]
+[          0         -0   0.943957  ]
+Minimum fftbox size, Smin = [  32  32  36  ]
+Chosen fftbox size, S = [  32  32  36  ]
+
+---------- Exchange Correlation functional ----------
+Initalized PBE GGA exchange.
+Initalized PBE GGA correlation.
+
+---------- Setting up pseudopotentials ----------
+Width of ionic core gaussian charges (only for fluid interactions / plotting) set to 0
+
+Reading pseudopotential file '/mnt/home/jcoulter/WORK/executables/jdftx/build/pseudopotentials/GBRV/mg_pbe.uspp':
+  Title: Mg.  Created by USPP 7.3.6 on 31-3-15
+  Reference state energy: -62.544908.  10 valence electrons in orbitals:
+    |200>  occupation: 2  eigenvalue: -3.025660
+    |210>  occupation: 6  eigenvalue: -1.804365
+    |300>  occupation: 1.7  eigenvalue: -0.242528
+  lMax: 2  lLocal: 3  QijEcut: 6
+  7 projectors sampled on a log grid with 661 points:
+    l: 0  eig: -3.025662  rCut: 1.35
+    l: 0  eig: -0.242530  rCut: 1.35
+    l: 0  eig: 1.000000  rCut: 1.35
+    l: 1  eig: -1.804367  rCut: 1.45
+    l: 1  eig: -0.500000  rCut: 1.45
+    l: 2  eig: 0.250000  rCut: 1.5
+    l: 2  eig: 1.250000  rCut: 1.5
+  Transforming local potential to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming nonlocal projectors to a uniform radial grid of dG=0.02 with 528 points.
+  Transforming density augmentations to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming atomic orbitals to a uniform radial grid of dG=0.02 with 528 points.
+  Core radius for overlap checks: 1.50 bohrs.
+
+Reading pseudopotential file '/mnt/home/jcoulter/WORK/executables/jdftx/build/pseudopotentials/GBRV/b_pbe.uspp':
+  Title: B.  Created by USPP 7.3.6 on 8-4-15
+  Reference state energy: -2.950027.  3 valence electrons in orbitals:
+    |200>  occupation: 2  eigenvalue: -0.346865
+    |210>  occupation: 1  eigenvalue: -0.132618
+  lMax: 1  lLocal: 2  QijEcut: 6
+  4 projectors sampled on a log grid with 559 points:
+    l: 0  eig: -0.346865  rCut: 1.25
+    l: 0  eig: -0.500000  rCut: 1.25
+    l: 1  eig: -0.346865  rCut: 1.25
+    l: 1  eig: -1.000000  rCut: 1.25
+  Partial core density with radius 0.9
+  Transforming core density to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming local potential to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming nonlocal projectors to a uniform radial grid of dG=0.02 with 528 points.
+  Transforming density augmentations to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming atomic orbitals to a uniform radial grid of dG=0.02 with 528 points.
+  Core radius for overlap checks: 1.25 bohrs.
+
+Initialized 2 species with 3 total atoms.
+
+Folded 1 k-points by 8x8x6 to 384 k-points.
+
+---------- Setting up k-points, bands, fillings ----------
+Reduced to 40 k-points under symmetry. 
+Computing the number of bands and number of electrons
+Reading initial fillings from 'totalE.fillings'.
+nElectrons:  16.000000   nBands: 22   nStates: 40
+
+----- Setting up reduced wavefunction bases (one per k-point) -----
+average nbasis = 1528.555 , ideal nbasis = 1528.434
+
+---------- Setting up ewald sum ----------
+Optimum gaussian width for ewald sums = 1.925514 bohr.
+Real space sum over 1089 unit cells with max indices [  5  5  4  ]
+Reciprocal space sum over 2535 terms with max indices [  6  6  7  ]
+
+---------- Allocating electronic variables ----------
+Reading eigenvalues from 'totalE.eigenvals'.
+Initializing wave functions:  reading from 'totalE.wfns'
+
+
+----- Initializing Supercell corresponding to k-point mesh -----
+Lattice vector linear combinations in supercell:
+[   8   0   0  ]
+[   0   8   0  ]
+[   0   0   6  ]
+Supercell lattice vectors:
+[  23.2496  23.2496  0  ]
+[  -40.2695  40.2695  0  ]
+[  0  0  39.9373  ]
+
+----------- Energy evaluation at fixed state -------------
+# Energy components:
+   Eewald =      -37.0034053005319379
+       EH =       23.6689413555681440
+     Eloc =      -63.3039377625809934
+      Enl =        7.3213478909508503
+      Exc =      -11.4758566084682485
+ Exc_core =        0.6845757269917371
+       KE =       11.7258716074387799
+-------------------------------------
+     Etot =      -68.3824630906316742
+       TS =        0.0057920073082901
+-------------------------------------
+        F =      -68.3882550979399610
+
+Fcut=1e-08 reduced nBands from 22 to 11 per unit cell.
+Dumping 'totalE.phononKpts' ... done.
+
+------- Configuring supercell and perturbation modes -------
+
+---------- Setting up symmetries ----------
+
+Found 24 point-group symmetries of the bravais lattice
+Found 24 space-group symmetries with basis (with translations restricted to unit cells)
+Applied RMS atom displacement 1.02565e-15 bohrs to make symmetries exact.
+
+Finding maximally-symmetric orthogonal basis for displacements:
+ [ +0.000000 +0.000000 +1.000000 ] |Stabilizer|: 12
+ [ +1.000000 +0.000000 +0.000000 ] |Stabilizer|: 4
+ [ +0.000000 +1.000000 +0.000000 ] |Stabilizer|: 4
+
+18 signed perturbations of the unit cell reduced to 4 under symmetries:
+Mg 0  [ +0.000000 +0.000000 +1.000000 ] 1.000000
+Mg 0  [ +1.000000 +0.000000 +0.000000 ] 2.000000
+B 0  [ +0.000000 +0.000000 +1.000000 ] 2.000000
+B 0  [ +1.000000 +0.000000 +0.000000 ] 4.000000
+
+Calculating unitary rotations of unit cell states under symmetries:
+	Matrix elements valid for E < +1.070144 (Emax = +1.391080) due to incomplete degenerate subspaces.
+	RMS unitarity error in valid subspaces: 7.793845e-08
+
+---- Citations for features of the code used in this run ----
+
+   Software package:
+      R. Sundararaman, K. Letchworth-Weaver, K.A. Schwarz, D. Gunceler, Y. Ozhabes and T.A. Arias, 'JDFTx: software for joint density-functional theory', SoftwareX 6, 278 (2017)
+
+   gga-PBE exchange-correlation functional:
+      J.P. Perdew, K. Burke and M. Ernzerhof, Phys. Rev. Lett. 77, 3865 (1996)
+
+   Pseudopotentials:
+      KF Garrity, JW Bennett, KM Rabe and D Vanderbilt, Comput. Mater. Sci. 81, 446 (2014)
+
+This list may not be complete. Please suggest additional citations or
+report any other bugs at https://github.com/shankar1729/jdftx/issues
+
+########### Perturbed supercell calculation 1 of 4 #############
+
+---------- Setting up symmetries ----------
+
+Found 24 point-group symmetries of the bravais lattice
+Found 12 space-group symmetries with basis
+Applied RMS atom displacement 4.95789e-16 bohrs to make symmetries exact.
+
+---------- Initializing the Grid ----------
+R = 
+[      11.6248      11.6248            0  ]
+[     -20.1348      20.1348            0  ]
+[            0            0      19.9687  ]
+unit cell volume = 9347.85
+G =
+[   0.270249  -0.156028          0  ]
+[   0.270249   0.156028         -0  ]
+[         -0          0   0.314652  ]
+Minimum fftbox size, Smin = [  116  116  100  ]
+Chosen fftbox size, S = [  128  128  108  ]
+
+---------- Exchange Correlation functional ----------
+Initalized PBE GGA exchange.
+Initalized PBE GGA correlation.
+
+---------- Setting up pseudopotentials ----------
+Width of ionic core gaussian charges (only for fluid interactions / plotting) set to 0
+
+Reading pseudopotential file '/mnt/home/jcoulter/WORK/executables/jdftx/build/pseudopotentials/GBRV/mg_pbe.uspp':
+  Title: Mg.  Created by USPP 7.3.6 on 31-3-15
+  Reference state energy: -62.544908.  10 valence electrons in orbitals:
+    |200>  occupation: 2  eigenvalue: -3.025660
+    |210>  occupation: 6  eigenvalue: -1.804365
+    |300>  occupation: 1.7  eigenvalue: -0.242528
+  lMax: 2  lLocal: 3  QijEcut: 6
+  7 projectors sampled on a log grid with 661 points:
+    l: 0  eig: -3.025662  rCut: 1.35
+    l: 0  eig: -0.242530  rCut: 1.35
+    l: 0  eig: 1.000000  rCut: 1.35
+    l: 1  eig: -1.804367  rCut: 1.45
+    l: 1  eig: -0.500000  rCut: 1.45
+    l: 2  eig: 0.250000  rCut: 1.5
+    l: 2  eig: 1.250000  rCut: 1.5
+  Transforming local potential to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming nonlocal projectors to a uniform radial grid of dG=0.02 with 528 points.
+  Transforming density augmentations to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming atomic orbitals to a uniform radial grid of dG=0.02 with 528 points.
+  Core radius for overlap checks: 1.50 bohrs.
+
+Reading pseudopotential file '/mnt/home/jcoulter/WORK/executables/jdftx/build/pseudopotentials/GBRV/b_pbe.uspp':
+  Title: B.  Created by USPP 7.3.6 on 8-4-15
+  Reference state energy: -2.950027.  3 valence electrons in orbitals:
+    |200>  occupation: 2  eigenvalue: -0.346865
+    |210>  occupation: 1  eigenvalue: -0.132618
+  lMax: 1  lLocal: 2  QijEcut: 6
+  4 projectors sampled on a log grid with 559 points:
+    l: 0  eig: -0.346865  rCut: 1.25
+    l: 0  eig: -0.500000  rCut: 1.25
+    l: 1  eig: -0.346865  rCut: 1.25
+    l: 1  eig: -1.000000  rCut: 1.25
+  Partial core density with radius 0.9
+  Transforming core density to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming local potential to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming nonlocal projectors to a uniform radial grid of dG=0.02 with 528 points.
+  Transforming density augmentations to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming atomic orbitals to a uniform radial grid of dG=0.02 with 528 points.
+  Core radius for overlap checks: 1.25 bohrs.
+
+Initialized 2 species with 144 total atoms.
+
+Folded 1 k-points by 2x2x2 to 8 k-points.
+
+---------- Setting up k-points, bands, fillings ----------
+Reduced to 4 k-points under symmetry. 
+Computing the number of bands and number of electrons
+Reading initial fillings from 'totalE.phonon.1.fillings'.
+nElectrons: 768.000000   nBands: 528   nStates: 4
+
+----- Setting up reduced wavefunction bases (one per k-point) -----
+average nbasis = 73370.625 , ideal nbasis = 73364.815
+
+---------- Setting up ewald sum ----------
+Optimum gaussian width for ewald sums = 3.670740 bohr.
+Real space sum over 343 unit cells with max indices [  3  3  3  ]
+Reciprocal space sum over 11109 terms with max indices [  11  11  10  ]
+
+---------- Allocating electronic variables ----------
+Skipped wave function initialization.
+
+
+-------- Electronic minimization -----------
+Will mix electronic density at each iteration.
+	FillingsUpdate:  mu: +0.334519343  nElectrons: 768.000000
+SCF: Cycle:  0   F: -3282.525404442560557   dF: -4.333e-02   |Residual|: 2.077e-01   |deigs|: 5.024e-03  t[s]:      9.74
+	FillingsUpdate:  mu: +0.334377408  nElectrons: 768.000000
+SCF: Cycle:  1   F: -3282.631159692740766   dF: -1.058e-01   |Residual|: 9.310e-02   |deigs|: 2.465e-03  t[s]:     13.60
+	FillingsUpdate:  mu: +0.334393378  nElectrons: 768.000000
+SCF: Cycle:  2   F: -3282.635319764531687   dF: -4.160e-03   |Residual|: 2.309e-02   |deigs|: 7.292e-04  t[s]:     17.34
+	FillingsUpdate:  mu: +0.334396808  nElectrons: 768.000000
+SCF: Cycle:  3   F: -3282.635864742915146   dF: -5.450e-04   |Residual|: 8.168e-03   |deigs|: 1.586e-04  t[s]:     20.77
+	FillingsUpdate:  mu: +0.334396446  nElectrons: 768.000000
+SCF: Cycle:  4   F: -3282.635872498552544   dF: -7.756e-06   |Residual|: 2.009e-03   |deigs|: 5.940e-05  t[s]:     23.07
+	FillingsUpdate:  mu: +0.334396462  nElectrons: 768.000000
+SCF: Cycle:  5   F: -3282.635874437213261   dF: -1.939e-06   |Residual|: 3.987e-04   |deigs|: 2.131e-05  t[s]:     25.36
+	FillingsUpdate:  mu: +0.334396489  nElectrons: 768.000000
+SCF: Cycle:  6   F: -3282.635874499060719   dF: -6.185e-08   |Residual|: 1.665e-04   |deigs|: 9.973e-06  t[s]:     27.69
+	FillingsUpdate:  mu: +0.334396525  nElectrons: 768.000000
+SCF: Cycle:  7   F: -3282.635874511327984   dF: -1.227e-08   |Residual|: 4.351e-05   |deigs|: 6.377e-06  t[s]:     30.05
+	FillingsUpdate:  mu: +0.334396531  nElectrons: 768.000000
+SCF: Cycle:  8   F: -3282.635874515024170   dF: -3.696e-09   |Residual|: 1.198e-05   |deigs|: 4.497e-06  t[s]:     32.29
+	FillingsUpdate:  mu: +0.334396530  nElectrons: 768.000000
+SCF: Cycle:  9   F: -3282.635874515983687   dF: -9.595e-10   |Residual|: 1.058e-05   |deigs|: 3.137e-06  t[s]:     34.34
+	FillingsUpdate:  mu: +0.334396528  nElectrons: 768.000000
+SCF: Cycle: 10   F: -3282.635874516357489   dF: -3.738e-10   |Residual|: 4.669e-06   |deigs|: 2.327e-06  t[s]:     36.56
+SCF: Converged (|Delta E|<1.000000e-09 for 2 iters).
+
+Setting wave functions to eigenvectors of Hamiltonian
+Energy change: 7.71218e-06 / unit cell
+RMS force: 0.000389912
+
+Dumping 'totalE.phonon.1.fillings' ... done
+Dumping 'totalE.phonon.1.wfns' ... done
+Dumping 'totalE.phonon.1.ionpos' ... done
+Dumping 'totalE.phonon.1.lattice' ... done
+Dumping 'totalE.phonon.1.n' ... done
+Dumping 'totalE.phonon.1.Vscloc' ... done
+Dumping 'totalE.phonon.1.eigenvals' ... done
+Dumping 'totalE.phonon.1.eigStats' ... 
+	eMin: -2.428988 at state 1 ( [ +0.000000 +0.000000 +0.500000 ] spin 0 )
+	HOMO: +0.331818 at state 1 ( [ +0.000000 +0.000000 +0.500000 ] spin 0 )
+	mu  : +0.334397
+	LUMO: +0.334780 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
+	eMax: +0.667597 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
+	HOMO-LUMO gap: +0.002962
+	Optical gap  : +0.009180 at state 2 ( [ +0.000000 +0.500000 +0.000000 ] spin 0 )
+Dumping 'totalE.phonon.1.dforces' ... done.
+Applied translational invariance (net force) relative correction: 0.000210185
+
+########### Perturbed supercell calculation 2 of 4 #############
+
+---------- Setting up symmetries ----------
+
+Found 24 point-group symmetries of the bravais lattice
+Found 4 space-group symmetries with basis
+Applied RMS atom displacement 0 bohrs to make symmetries exact.
+
+---------- Initializing the Grid ----------
+R = 
+[      11.6248      11.6248            0  ]
+[     -20.1348      20.1348            0  ]
+[            0            0      19.9687  ]
+unit cell volume = 9347.85
+G =
+[   0.270249  -0.156028          0  ]
+[   0.270249   0.156028         -0  ]
+[         -0          0   0.314652  ]
+Minimum fftbox size, Smin = [  116  116  100  ]
+Chosen fftbox size, S = [  128  128  108  ]
+
+---------- Exchange Correlation functional ----------
+Initalized PBE GGA exchange.
+Initalized PBE GGA correlation.
+
+---------- Setting up pseudopotentials ----------
+Width of ionic core gaussian charges (only for fluid interactions / plotting) set to 0
+
+Reading pseudopotential file '/mnt/home/jcoulter/WORK/executables/jdftx/build/pseudopotentials/GBRV/mg_pbe.uspp':
+  Title: Mg.  Created by USPP 7.3.6 on 31-3-15
+  Reference state energy: -62.544908.  10 valence electrons in orbitals:
+    |200>  occupation: 2  eigenvalue: -3.025660
+    |210>  occupation: 6  eigenvalue: -1.804365
+    |300>  occupation: 1.7  eigenvalue: -0.242528
+  lMax: 2  lLocal: 3  QijEcut: 6
+  7 projectors sampled on a log grid with 661 points:
+    l: 0  eig: -3.025662  rCut: 1.35
+    l: 0  eig: -0.242530  rCut: 1.35
+    l: 0  eig: 1.000000  rCut: 1.35
+    l: 1  eig: -1.804367  rCut: 1.45
+    l: 1  eig: -0.500000  rCut: 1.45
+    l: 2  eig: 0.250000  rCut: 1.5
+    l: 2  eig: 1.250000  rCut: 1.5
+  Transforming local potential to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming nonlocal projectors to a uniform radial grid of dG=0.02 with 528 points.
+  Transforming density augmentations to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming atomic orbitals to a uniform radial grid of dG=0.02 with 528 points.
+  Core radius for overlap checks: 1.50 bohrs.
+
+Reading pseudopotential file '/mnt/home/jcoulter/WORK/executables/jdftx/build/pseudopotentials/GBRV/b_pbe.uspp':
+  Title: B.  Created by USPP 7.3.6 on 8-4-15
+  Reference state energy: -2.950027.  3 valence electrons in orbitals:
+    |200>  occupation: 2  eigenvalue: -0.346865
+    |210>  occupation: 1  eigenvalue: -0.132618
+  lMax: 1  lLocal: 2  QijEcut: 6
+  4 projectors sampled on a log grid with 559 points:
+    l: 0  eig: -0.346865  rCut: 1.25
+    l: 0  eig: -0.500000  rCut: 1.25
+    l: 1  eig: -0.346865  rCut: 1.25
+    l: 1  eig: -1.000000  rCut: 1.25
+  Partial core density with radius 0.9
+  Transforming core density to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming local potential to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming nonlocal projectors to a uniform radial grid of dG=0.02 with 528 points.
+  Transforming density augmentations to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming atomic orbitals to a uniform radial grid of dG=0.02 with 528 points.
+  Core radius for overlap checks: 1.25 bohrs.
+
+Initialized 2 species with 144 total atoms.
+
+Folded 1 k-points by 2x2x2 to 8 k-points.
+
+---------- Setting up k-points, bands, fillings ----------
+Reduced to 6 k-points under symmetry. 
+Computing the number of bands and number of electrons
+Calculating initial fillings.
+nElectrons: 768.000000   nBands: 528   nStates: 6
+
+----- Setting up reduced wavefunction bases (one per k-point) -----
+average nbasis = 73370.625 , ideal nbasis = 73364.815
+
+---------- Setting up ewald sum ----------
+Optimum gaussian width for ewald sums = 3.670740 bohr.
+Real space sum over 343 unit cells with max indices [  3  3  3  ]
+Reciprocal space sum over 11109 terms with max indices [  11  11  10  ]
+
+---------- Allocating electronic variables ----------
+Skipped wave function initialization.
+
+
+-------- Electronic minimization -----------
+Will mix electronic density at each iteration.
+	FillingsUpdate:  mu: +0.334476895  nElectrons: 768.000000
+SCF: Cycle:  0   F: -3282.530970334244103   dF: -5.023e-02   |Residual|: 2.069e-01   |deigs|: 5.163e-03  t[s]:     57.59
+	FillingsUpdate:  mu: +0.334379931  nElectrons: 768.000000
+SCF: Cycle:  1   F: -3282.629309337322866   dF: -9.834e-02   |Residual|: 9.287e-02   |deigs|: 2.343e-03  t[s]:     64.46
+	FillingsUpdate:  mu: +0.334391626  nElectrons: 768.000000
+SCF: Cycle:  2   F: -3282.635635388026003   dF: -6.326e-03   |Residual|: 1.917e-02   |deigs|: 1.026e-03  t[s]:     71.59
+	FillingsUpdate:  mu: +0.334395576  nElectrons: 768.000000
+SCF: Cycle:  3   F: -3282.635827752503246   dF: -1.924e-04   |Residual|: 7.554e-03   |deigs|: 1.764e-04  t[s]:     77.67
+	FillingsUpdate:  mu: +0.334396382  nElectrons: 768.000000
+SCF: Cycle:  4   F: -3282.635838851894277   dF: -1.110e-05   |Residual|: 1.222e-03   |deigs|: 7.035e-05  t[s]:     81.56
+	FillingsUpdate:  mu: +0.334396357  nElectrons: 768.000000
+SCF: Cycle:  5   F: -3282.635839702931207   dF: -8.510e-07   |Residual|: 3.580e-04   |deigs|: 2.003e-05  t[s]:     85.52
+	FillingsUpdate:  mu: +0.334396302  nElectrons: 768.000000
+SCF: Cycle:  6   F: -3282.635839757225767   dF: -5.429e-08   |Residual|: 1.491e-04   |deigs|: 9.488e-06  t[s]:     89.50
+	FillingsUpdate:  mu: +0.334396282  nElectrons: 768.000000
+SCF: Cycle:  7   F: -3282.635839767397101   dF: -1.017e-08   |Residual|: 3.987e-05   |deigs|: 6.497e-06  t[s]:     93.45
+	FillingsUpdate:  mu: +0.334396301  nElectrons: 768.000000
+SCF: Cycle:  8   F: -3282.635839770430721   dF: -3.034e-09   |Residual|: 9.934e-06   |deigs|: 5.195e-06  t[s]:     97.23
+	FillingsUpdate:  mu: +0.334396307  nElectrons: 768.000000
+SCF: Cycle:  9   F: -3282.635839771285646   dF: -8.549e-10   |Residual|: 8.001e-06   |deigs|: 4.421e-06  t[s]:    100.71
+	FillingsUpdate:  mu: +0.334396308  nElectrons: 768.000000
+SCF: Cycle: 10   F: -3282.635839771827250   dF: -5.416e-10   |Residual|: 2.927e-06   |deigs|: 6.923e-06  t[s]:    104.28
+SCF: Converged (|Delta E|<1.000000e-09 for 2 iters).
+
+Setting wave functions to eigenvectors of Hamiltonian
+Energy change: 8.43603e-06 / unit cell
+RMS force: 0.000377889
+
+Dumping 'totalE.phonon.2.fillings' ... done
+Dumping 'totalE.phonon.2.wfns' ... done
+Dumping 'totalE.phonon.2.ionpos' ... done
+Dumping 'totalE.phonon.2.lattice' ... done
+Dumping 'totalE.phonon.2.n' ... done
+Dumping 'totalE.phonon.2.Vscloc' ... done
+Dumping 'totalE.phonon.2.eigenvals' ... done
+Dumping 'totalE.phonon.2.eigStats' ... 
+	eMin: -2.428948 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
+	HOMO: +0.331993 at state 1 ( [ +0.000000 +0.000000 +0.500000 ] spin 0 )
+	mu  : +0.334396
+	LUMO: +0.334583 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
+	eMax: +0.667661 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
+	HOMO-LUMO gap: +0.002590
+	Optical gap  : +0.009204 at state 2 ( [ +0.000000 +0.500000 +0.000000 ] spin 0 )
+Dumping 'totalE.phonon.2.dforces' ... done.
+Applied translational invariance (net force) relative correction: 7.89372e-05
+
+########### Perturbed supercell calculation 3 of 4 #############
+
+---------- Setting up symmetries ----------
+
+Found 24 point-group symmetries of the bravais lattice
+Found 6 space-group symmetries with basis
+Applied RMS atom displacement 6.77169e-16 bohrs to make symmetries exact.
+
+---------- Initializing the Grid ----------
+R = 
+[      11.6248      11.6248            0  ]
+[     -20.1348      20.1348            0  ]
+[            0            0      19.9687  ]
+unit cell volume = 9347.85
+G =
+[   0.270249  -0.156028          0  ]
+[   0.270249   0.156028         -0  ]
+[         -0          0   0.314652  ]
+Minimum fftbox size, Smin = [  116  116  100  ]
+Chosen fftbox size, S = [  128  128  108  ]
+
+---------- Exchange Correlation functional ----------
+Initalized PBE GGA exchange.
+Initalized PBE GGA correlation.
+
+---------- Setting up pseudopotentials ----------
+Width of ionic core gaussian charges (only for fluid interactions / plotting) set to 0
+
+Reading pseudopotential file '/mnt/home/jcoulter/WORK/executables/jdftx/build/pseudopotentials/GBRV/mg_pbe.uspp':
+  Title: Mg.  Created by USPP 7.3.6 on 31-3-15
+  Reference state energy: -62.544908.  10 valence electrons in orbitals:
+    |200>  occupation: 2  eigenvalue: -3.025660
+    |210>  occupation: 6  eigenvalue: -1.804365
+    |300>  occupation: 1.7  eigenvalue: -0.242528
+  lMax: 2  lLocal: 3  QijEcut: 6
+  7 projectors sampled on a log grid with 661 points:
+    l: 0  eig: -3.025662  rCut: 1.35
+    l: 0  eig: -0.242530  rCut: 1.35
+    l: 0  eig: 1.000000  rCut: 1.35
+    l: 1  eig: -1.804367  rCut: 1.45
+    l: 1  eig: -0.500000  rCut: 1.45
+    l: 2  eig: 0.250000  rCut: 1.5
+    l: 2  eig: 1.250000  rCut: 1.5
+  Transforming local potential to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming nonlocal projectors to a uniform radial grid of dG=0.02 with 528 points.
+  Transforming density augmentations to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming atomic orbitals to a uniform radial grid of dG=0.02 with 528 points.
+  Core radius for overlap checks: 1.50 bohrs.
+
+Reading pseudopotential file '/mnt/home/jcoulter/WORK/executables/jdftx/build/pseudopotentials/GBRV/b_pbe.uspp':
+  Title: B.  Created by USPP 7.3.6 on 8-4-15
+  Reference state energy: -2.950027.  3 valence electrons in orbitals:
+    |200>  occupation: 2  eigenvalue: -0.346865
+    |210>  occupation: 1  eigenvalue: -0.132618
+  lMax: 1  lLocal: 2  QijEcut: 6
+  4 projectors sampled on a log grid with 559 points:
+    l: 0  eig: -0.346865  rCut: 1.25
+    l: 0  eig: -0.500000  rCut: 1.25
+    l: 1  eig: -0.346865  rCut: 1.25
+    l: 1  eig: -1.000000  rCut: 1.25
+  Partial core density with radius 0.9
+  Transforming core density to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming local potential to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming nonlocal projectors to a uniform radial grid of dG=0.02 with 528 points.
+  Transforming density augmentations to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming atomic orbitals to a uniform radial grid of dG=0.02 with 528 points.
+  Core radius for overlap checks: 1.25 bohrs.
+
+Initialized 2 species with 144 total atoms.
+
+Folded 1 k-points by 2x2x2 to 8 k-points.
+
+---------- Setting up k-points, bands, fillings ----------
+Reduced to 4 k-points under symmetry. 
+Computing the number of bands and number of electrons
+Calculating initial fillings.
+nElectrons: 768.000000   nBands: 528   nStates: 4
+
+----- Setting up reduced wavefunction bases (one per k-point) -----
+average nbasis = 73370.625 , ideal nbasis = 73364.815
+
+---------- Setting up ewald sum ----------
+Optimum gaussian width for ewald sums = 3.670740 bohr.
+Real space sum over 343 unit cells with max indices [  3  3  3  ]
+Reciprocal space sum over 11109 terms with max indices [  11  11  10  ]
+
+---------- Allocating electronic variables ----------
+Skipped wave function initialization.
+
+
+-------- Electronic minimization -----------
+Will mix electronic density at each iteration.
+	FillingsUpdate:  mu: +0.334404867  nElectrons: 768.000000
+SCF: Cycle:  0   F: -3282.610908206858312   dF: +1.220e-02   |Residual|: 5.028e-02   |deigs|: 4.819e-03  t[s]:    125.15
+	FillingsUpdate:  mu: +0.334393664  nElectrons: 768.000000
+SCF: Cycle:  1   F: -3282.633804917647012   dF: -2.290e-02   |Residual|: 1.991e-02   |deigs|: 1.706e-03  t[s]:    128.62
+	FillingsUpdate:  mu: +0.334396660  nElectrons: 768.000000
+SCF: Cycle:  2   F: -3282.635622034300013   dF: -1.817e-03   |Residual|: 5.038e-03   |deigs|: 6.315e-04  t[s]:    131.80
+	FillingsUpdate:  mu: +0.334397679  nElectrons: 768.000000
+SCF: Cycle:  3   F: -3282.635729589728271   dF: -1.076e-04   |Residual|: 2.100e-03   |deigs|: 1.297e-04  t[s]:    134.11
+	FillingsUpdate:  mu: +0.334397834  nElectrons: 768.000000
+SCF: Cycle:  4   F: -3282.635731790442151   dF: -2.201e-06   |Residual|: 5.487e-04   |deigs|: 5.244e-05  t[s]:    136.41
+	FillingsUpdate:  mu: +0.334397784  nElectrons: 768.000000
+SCF: Cycle:  5   F: -3282.635732030727922   dF: -2.403e-07   |Residual|: 1.455e-04   |deigs|: 2.543e-05  t[s]:    138.76
+	FillingsUpdate:  mu: +0.334397764  nElectrons: 768.000000
+SCF: Cycle:  6   F: -3282.635732048228874   dF: -1.750e-08   |Residual|: 4.151e-05   |deigs|: 1.441e-05  t[s]:    141.12
+	FillingsUpdate:  mu: +0.334397762  nElectrons: 768.000000
+SCF: Cycle:  7   F: -3282.635732051471678   dF: -3.243e-09   |Residual|: 1.132e-05   |deigs|: 1.536e-05  t[s]:    144.00
+	FillingsUpdate:  mu: +0.334397763  nElectrons: 768.000000
+SCF: Cycle:  8   F: -3282.635732052471212   dF: -9.995e-10   |Residual|: 3.808e-06   |deigs|: 1.547e-05  t[s]:    146.78
+	FillingsUpdate:  mu: +0.334397764  nElectrons: 768.000000
+SCF: Cycle:  9   F: -3282.635732052779076   dF: -3.079e-10   |Residual|: 1.646e-06   |deigs|: 8.882e-06  t[s]:    148.55
+SCF: Converged (|Delta E|<1.000000e-09 for 2 iters).
+
+Setting wave functions to eigenvectors of Hamiltonian
+Energy change: 1.06802e-05 / unit cell
+RMS force: 0.000541501
+
+Dumping 'totalE.phonon.3.fillings' ... done
+Dumping 'totalE.phonon.3.wfns' ... done
+Dumping 'totalE.phonon.3.ionpos' ... done
+Dumping 'totalE.phonon.3.lattice' ... done
+Dumping 'totalE.phonon.3.n' ... done
+Dumping 'totalE.phonon.3.Vscloc' ... done
+Dumping 'totalE.phonon.3.eigenvals' ... done
+Dumping 'totalE.phonon.3.eigStats' ... 
+	eMin: -2.429245 at state 1 ( [ +0.000000 +0.000000 +0.500000 ] spin 0 )
+	HOMO: +0.331814 at state 1 ( [ +0.000000 +0.000000 +0.500000 ] spin 0 )
+	mu  : +0.334398
+	LUMO: +0.334720 at state 2 ( [ +0.000000 +0.500000 +0.000000 ] spin 0 )
+	eMax: +0.667692 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
+	HOMO-LUMO gap: +0.002906
+	Optical gap  : +0.008983 at state 2 ( [ +0.000000 +0.500000 +0.000000 ] spin 0 )
+Dumping 'totalE.phonon.3.dforces' ... done.
+Applied translational invariance (net force) relative correction: 2.88844e-05
+
+########### Perturbed supercell calculation 4 of 4 #############
+
+---------- Setting up symmetries ----------
+
+Found 24 point-group symmetries of the bravais lattice
+Found 2 space-group symmetries with basis
+Applied RMS atom displacement 5.28956e-16 bohrs to make symmetries exact.
+
+---------- Initializing the Grid ----------
+R = 
+[      11.6248      11.6248            0  ]
+[     -20.1348      20.1348            0  ]
+[            0            0      19.9687  ]
+unit cell volume = 9347.85
+G =
+[   0.270249  -0.156028          0  ]
+[   0.270249   0.156028         -0  ]
+[         -0          0   0.314652  ]
+Minimum fftbox size, Smin = [  116  116  100  ]
+Chosen fftbox size, S = [  128  128  108  ]
+
+---------- Exchange Correlation functional ----------
+Initalized PBE GGA exchange.
+Initalized PBE GGA correlation.
+
+---------- Setting up pseudopotentials ----------
+Width of ionic core gaussian charges (only for fluid interactions / plotting) set to 0
+
+Reading pseudopotential file '/mnt/home/jcoulter/WORK/executables/jdftx/build/pseudopotentials/GBRV/mg_pbe.uspp':
+  Title: Mg.  Created by USPP 7.3.6 on 31-3-15
+  Reference state energy: -62.544908.  10 valence electrons in orbitals:
+    |200>  occupation: 2  eigenvalue: -3.025660
+    |210>  occupation: 6  eigenvalue: -1.804365
+    |300>  occupation: 1.7  eigenvalue: -0.242528
+  lMax: 2  lLocal: 3  QijEcut: 6
+  7 projectors sampled on a log grid with 661 points:
+    l: 0  eig: -3.025662  rCut: 1.35
+    l: 0  eig: -0.242530  rCut: 1.35
+    l: 0  eig: 1.000000  rCut: 1.35
+    l: 1  eig: -1.804367  rCut: 1.45
+    l: 1  eig: -0.500000  rCut: 1.45
+    l: 2  eig: 0.250000  rCut: 1.5
+    l: 2  eig: 1.250000  rCut: 1.5
+  Transforming local potential to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming nonlocal projectors to a uniform radial grid of dG=0.02 with 528 points.
+  Transforming density augmentations to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming atomic orbitals to a uniform radial grid of dG=0.02 with 528 points.
+  Core radius for overlap checks: 1.50 bohrs.
+
+Reading pseudopotential file '/mnt/home/jcoulter/WORK/executables/jdftx/build/pseudopotentials/GBRV/b_pbe.uspp':
+  Title: B.  Created by USPP 7.3.6 on 8-4-15
+  Reference state energy: -2.950027.  3 valence electrons in orbitals:
+    |200>  occupation: 2  eigenvalue: -0.346865
+    |210>  occupation: 1  eigenvalue: -0.132618
+  lMax: 1  lLocal: 2  QijEcut: 6
+  4 projectors sampled on a log grid with 559 points:
+    l: 0  eig: -0.346865  rCut: 1.25
+    l: 0  eig: -0.500000  rCut: 1.25
+    l: 1  eig: -0.346865  rCut: 1.25
+    l: 1  eig: -1.000000  rCut: 1.25
+  Partial core density with radius 0.9
+  Transforming core density to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming local potential to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming nonlocal projectors to a uniform radial grid of dG=0.02 with 528 points.
+  Transforming density augmentations to a uniform radial grid of dG=0.02 with 1932 points.
+  Transforming atomic orbitals to a uniform radial grid of dG=0.02 with 528 points.
+  Core radius for overlap checks: 1.25 bohrs.
+
+Initialized 2 species with 144 total atoms.
+
+Folded 1 k-points by 2x2x2 to 8 k-points.
+
+---------- Setting up k-points, bands, fillings ----------
+No reducable k-points. 
+Computing the number of bands and number of electrons
+Calculating initial fillings.
+nElectrons: 768.000000   nBands: 528   nStates: 8
+
+----- Setting up reduced wavefunction bases (one per k-point) -----
+average nbasis = 73370.625 , ideal nbasis = 73364.815
+
+---------- Setting up ewald sum ----------
+Optimum gaussian width for ewald sums = 3.670740 bohr.
+Real space sum over 343 unit cells with max indices [  3  3  3  ]
+Reciprocal space sum over 11109 terms with max indices [  11  11  10  ]
+
+---------- Allocating electronic variables ----------
+Skipped wave function initialization.
+
+
+-------- Electronic minimization -----------
+Will mix electronic density at each iteration.
+	FillingsUpdate:  mu: +0.334436897  nElectrons: 768.000000
+SCF: Cycle:  0   F: -3282.599021206565794   dF: +2.214e-02   |Residual|: 6.012e-02   |deigs|: 5.030e-03  t[s]:    168.55
+	FillingsUpdate:  mu: +0.334397877  nElectrons: 768.000000
+SCF: Cycle:  1   F: -3282.634101508148433   dF: -3.508e-02   |Residual|: 2.002e-02   |deigs|: 1.363e-03  t[s]:    174.35
+	FillingsUpdate:  mu: +0.334400409  nElectrons: 768.000000
+SCF: Cycle:  2   F: -3282.635248928462261   dF: -1.147e-03   |Residual|: 7.733e-03   |deigs|: 4.277e-04  t[s]:    179.82
+	FillingsUpdate:  mu: +0.334401670  nElectrons: 768.000000
+SCF: Cycle:  3   F: -3282.635367919643159   dF: -1.190e-04   |Residual|: 1.960e-03   |deigs|: 1.707e-04  t[s]:    183.68
+	FillingsUpdate:  mu: +0.334401538  nElectrons: 768.000000
+SCF: Cycle:  4   F: -3282.635374640600730   dF: -6.721e-06   |Residual|: 8.203e-04   |deigs|: 4.209e-05  t[s]:    187.56
+	FillingsUpdate:  mu: +0.334401450  nElectrons: 768.000000
+SCF: Cycle:  5   F: -3282.635375128029864   dF: -4.874e-07   |Residual|: 1.800e-04   |deigs|: 2.138e-05  t[s]:    191.52
+	FillingsUpdate:  mu: +0.334401432  nElectrons: 768.000000
+SCF: Cycle:  6   F: -3282.635375164715697   dF: -3.669e-08   |Residual|: 5.601e-05   |deigs|: 1.440e-05  t[s]:    195.47
+	FillingsUpdate:  mu: +0.334401443  nElectrons: 768.000000
+SCF: Cycle:  7   F: -3282.635375172682416   dF: -7.967e-09   |Residual|: 1.519e-05   |deigs|: 1.119e-05  t[s]:    199.28
+	FillingsUpdate:  mu: +0.334401440  nElectrons: 768.000000
+SCF: Cycle:  8   F: -3282.635375174585079   dF: -1.903e-09   |Residual|: 6.072e-06   |deigs|: 3.468e-05  t[s]:    203.67
+	FillingsUpdate:  mu: +0.334401439  nElectrons: 768.000000
+SCF: Cycle:  9   F: -3282.635375174944329   dF: -3.593e-10   |Residual|: 2.806e-06   |deigs|: 4.466e-05  t[s]:    207.47
+	FillingsUpdate:  mu: +0.334401439  nElectrons: 768.000000
+SCF: Cycle: 10   F: -3282.635375174992078   dF: -4.775e-11   |Residual|: 9.642e-07   |deigs|: 2.951e-05  t[s]:    210.84
+SCF: Converged (|Delta E|<1.000000e-09 for 2 iters).
+
+Setting wave functions to eigenvectors of Hamiltonian
+Energy change: 1.81151e-05 / unit cell
+RMS force: 0.000870582
+
+Dumping 'totalE.phonon.4.fillings' ... done
+Dumping 'totalE.phonon.4.wfns' ... done
+Dumping 'totalE.phonon.4.ionpos' ... done
+Dumping 'totalE.phonon.4.lattice' ... done
+Dumping 'totalE.phonon.4.n' ... done
+Dumping 'totalE.phonon.4.Vscloc' ... done
+Dumping 'totalE.phonon.4.eigenvals' ... done
+Dumping 'totalE.phonon.4.eigStats' ... 
+	eMin: -2.429020 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
+	HOMO: +0.334337 at state 4 ( [ +0.500000 +0.000000 +0.000000 ] spin 0 )
+	mu  : +0.334401
+	LUMO: +0.334419 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
+	eMax: +0.667678 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
+	HOMO-LUMO gap: +0.000081
+	Optical gap  : +0.000720 at state 4 ( [ +0.500000 +0.000000 +0.000000 ] spin 0 )
+Dumping 'totalE.phonon.4.dforces' ... done.
+Applied translational invariance (net force) relative correction: 3.86475e-05
+
+Refining force matrix in reciprocal space:
+	Corrected hermiticity relative error: 0.000220562
+	Corrected translational invariance relative error: 2.38201e-05
+
+Dumping 'totalE.phononCellMap' ... done.
+Dumping 'totalE.phononCellWeights'... done.
+
+Finalizing force matrix in real space:
+	Corrected gamma-point derivative relative error: 1.62399e-16
+	Hermiticity relative error: 6.42324e-16
+	Translational invariance relative error: 8.16313e-17
+
+Dumping 'totalE.phononOmegaSq' ... done.
+Dumping 'totalE.phononBasis' ... done.
+Dumping 'totalE.phononHsub' ... done.
+
+Phonon free energy components (per unit cell) at T = 298 K:
+	ZPE:          0.009755
+	Evib:         0.012303
+	TSvib:        0.004006
+	Avib:         0.008296
+
+End date and time: Sun Apr 14 08:09:47 2024  (Duration: 0-0:04:13.61)
+Done!
+
+PROFILER:             augmentDensityGrid     0.017611 +/-     0.028629 s,   96 calls,      1.690644 s total
+PROFILER:         augmentDensityGridGrad     0.196692 +/-     0.088797 s,  106 calls,     20.849322 s total
+PROFILER:        augmentDensitySpherical     0.005961 +/-     0.002576 s,  138 calls,      0.822601 s total
+PROFILER:    augmentDensitySphericalGrad     0.005249 +/-     0.001798 s,  408 calls,      2.141753 s total
+PROFILER:                 augmentOverlap     0.012874 +/-     0.018204 s,  894 calls,     11.509318 s total
+PROFILER:                     diagouterI     0.062437 +/-     0.025486 s,   69 calls,      4.308187 s total
+PROFILER:              EdensityAndVscloc     0.043513 +/-     0.005130 s,   87 calls,      3.785651 s total
+PROFILER:                     EnlAndGrad     0.010627 +/-     0.003866 s,  516 calls,      5.483354 s total
+PROFILER:            ExCorrCommunication     0.011346 +/-     0.008141 s,  309 calls,      3.505932 s total
+PROFILER:               ExCorrFunctional     0.001913 +/-     0.000424 s,  106 calls,      0.202783 s total
+PROFILER:                    ExCorrTotal     0.040259 +/-     0.017041 s,  106 calls,      4.267408 s total
+PROFILER:                   Idag_DiagV_I     0.088722 +/-     0.058120 s,  189 calls,     16.768493 s total
+PROFILER:                    inv(matrix)     0.000072 +/-     0.000236 s,   39 calls,      0.002792 s total
+PROFILER:            matrix::diagonalize     0.003009 +/-     0.038988 s, 15902 calls,     47.841959 s total
+PROFILER:                    matrix::set     0.000010 +/-     0.000044 s, 294711 calls,      3.064523 s total
+PROFILER:            orthoMatrix(matrix)     0.029526 +/-     0.013508 s,   87 calls,      2.568737 s total
+PROFILER:       phonon::getPerturbedHsub     0.971329 +/-     0.003403 s,    4 calls,      3.885315 s total
+PROFILER:            phonon::setSupState     0.278099 +/-     0.086943 s,    4 calls,      1.112395 s total
+PROFILER:     RadialFunctionR::transform     0.003510 +/-     0.001475 s,  390 calls,      1.368972 s total
+PROFILER:                    reduceKmesh     0.002287 +/-     0.001552 s,    5 calls,      0.011433 s total
+PROFILER:                            Y*M     0.007872 +/-     0.007368 s, 1688 calls,     13.287254 s total
+PROFILER:                          Y1^Y2     0.002674 +/-     0.006004 s, 4170 calls,     11.151331 s total
+
+MEMUSAGE:                   ColumnBundle     4.136917 GB
+MEMUSAGE:             complexScalarField     0.052734 GB
+MEMUSAGE:        complexScalarFieldTilde     0.026367 GB
+MEMUSAGE:                    IndexArrays     0.020455 GB
+MEMUSAGE:                         matrix     0.383984 GB
+MEMUSAGE:                           misc     0.032448 GB
+MEMUSAGE:                     RealKernel     0.013428 GB
+MEMUSAGE:                    ScalarField     0.409790 GB
+MEMUSAGE:               ScalarFieldTilde     0.121429 GB
+MEMUSAGE:                          Total     4.627965 GB
