@@ -8,6 +8,33 @@ import concurrent.futures
 from scipy.optimize import curve_fit
 import itertools
 from multiprocessing import Value, Lock#np.set_printoptions(precision=8, threshold=1000000, linewidth=1000000, suppress=True)
+import inspect
+
+
+
+#****************************
+#Debug macro
+#****************************
+debug = False
+def Print(someVariable):
+    if debug:
+        # Get the name of the variable
+        frame = inspect.currentframe().f_back
+        var_name = None
+        for name, val in frame.f_locals.items():
+            if val is someVariable:
+                var_name = name
+                break
+        
+        if var_name is None:
+            var_name = 'unknown variable'
+
+        if hasattr(someVariable, 'shape'):
+            print(f"The shape of {var_name} is: {someVariable.shape}")
+        else:
+            print(f"{var_name} does not have a shape attribute")
+
+
 
 # ====================================================================
 # Here we are reading in data output by JDFTx, no modification needed
@@ -139,8 +166,12 @@ counter = Value('i', 0)
 lock = Lock()
 
 
+
+
 # Transpose the array to bring the last two dimensions to the front
 T_transposed = HePhWannier.transpose(2, 3, 4, 0, 1)  # New shape will be (9, 8, 8, 131, 131)
+Print(HePhWannier)
+Print(T_transposed)
 
 # Function to find max value and terms till 1% of max
 def findMaxAndOnePercent(array):
@@ -149,11 +180,18 @@ def findMaxAndOnePercent(array):
     termsToOnePercent = np.sum(array >= threshold)
     return maxValue, termsToOnePercent
 
+# Define the exponential decay function
+def exp_decay(x, a, b, c):
+    return a * np.exp(-b * x) + c
+
 # Function to truncate matrices
 def truncate_matrices(U, S, Vt, r):
     U_trunc = U[:, :r]
+    Print(U_trunc)
     S_trunc = S[:r]
+    Print(S_trunc)
     Vt_trunc = Vt[:r, :]
+    Print(Vt_trunc)
     return U_trunc, S_trunc, Vt_trunc
 
 
@@ -165,42 +203,47 @@ def increment_counter():
 
 # Function to perform SVD on a specific slice and additional calculations
 def compute_svd(params):
-    k, l, m, T, g = params
+    v, m, n, T, g = params
 
-    matrix_2D = T[k, l, m, :, :]  # Extract (131, 131) slice+
+    matrix_2D = T[v, m, n, :, :]  # Extract (131, 131) slice+
     U, S, Vt = np.linalg.svd(matrix_2D, full_matrices=False)
-    
+    # Print(U)
+    # Print(S)
+    # Print(Vt)
+
+    # print("Value of v: ", v)
+    # print("Value of m: ",m)
+    # print("Value of n: ",n)
+
+    # Exponential decay fit
+    x = np.arange(len(S))  # Generate x values based on the length of S
+    popt, _ = curve_fit(exp_decay, x, S, p0=(1, 1, 1))
+    a, b, c = popt
+
+
     # Calculate max singular value and terms to 1% of max
     maxSingularValue, termsToOnePercent = findMaxAndOnePercent(S)
     
     # Set the desired truncation dimension
     r = int(termsToOnePercent) + 5 
-
+    # print("Value of r: ", r)
     # Reconstruct the truncated matrix
-    U_trunc, S_trunc, Vt_trunc = truncate_matrices(U, S, Vt, r)
-    truncated_matrix = np.dot(U_trunc, np.dot(np.diag(S_trunc), Vt_trunc))
-    
+    # U_trunc, S_trunc, Vt_trunc = truncate_matrices(U, S, Vt, r)
+    # truncated_matrix = np.dot(U_trunc, np.dot(np.diag(S_trunc), Vt_trunc))
+    # Print(truncated_matrix)
+
+
     # Create a 5D array with the correct shape
-    truncated_result = np.empty((131, 131, T.shape[0], T.shape[1], T.shape[2]))
-    truncated_result[:, :, k, l, m] = truncated_matrix
-    # print("Shape of truncted_result is: ", truncated_result.shape)
+    # truncated_result = np.empty((131, 131, 9, 8, 8))
+    # truncated_result[:, :, v, m, n] = truncated_matrix
+    # Print(truncated_result)
 
+    # sum_result, _, _, _ = calcEph(k2, k1, truncated_result)
+    # Print(sum_result)
 
-    sum_result, _, _, _ = calcEph(k2, k1, truncated_result)
-    
-    # Extract the scalar value from g
-    gOld_temp = g[0, 0, k, l, m]
-    gOld = gOld_temp*gOld_temp.conj()
-
-
-    gNew_temp = sum_result[0,0,k,l,m]
-    gNew = gNew_temp*gNew_temp.conj()
-
-    
-    # Increment and print the counter
     increment_counter()
 
-    return (k, l, m, maxSingularValue, termsToOnePercent, gNew, gOld)
+    return (v, m, n, maxSingularValue, termsToOnePercent,  b)
 
 # Prepare the parameters for each task using itertools.product
 params = [(k, l, m, T_transposed, g) for k, l, m in itertools.product(range(9), range(8), range(8))]
@@ -213,10 +256,10 @@ with concurrent.futures.ProcessPoolExecutor() as executor:
 results = [result for result in results if result is not None]
 
 # Create a DataFrame from the results
-df = pd.DataFrame(results, columns=['k', 'l', 'm', 'max_singular_value', 'terms_to_one_percent', 'gOld', 'gNew'])
+df = pd.DataFrame(results, columns=['v', 'm', 'n', 'max_singular_value', 'terms_to_one_percent', 'exponential_decay'])
 
 # Sort the DataFrame by columns 'k', 'l', 'm' in ascending order
-df_sorted = df.sort_values(by=['k', 'l', 'm'], ascending=[True, True, True])
+df_sorted = df.sort_values(by=['v', 'm', 'n'], ascending=[True, True, True])
 
 # Reset the index if you want a clean index
 df_sorted.reset_index(drop=True, inplace=True)
@@ -224,5 +267,5 @@ df_sorted.reset_index(drop=True, inplace=True)
 # Save the DataFrame to a CSV file
 df_sorted.to_csv('svd_results.csv', index=False)
 
-# # Display the DataFrame
-# print(df_sorted.head())
+# Display the DataFrame
+print(df_sorted.head())
